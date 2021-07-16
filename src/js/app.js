@@ -68,8 +68,9 @@ App = {
       return adoptionInstance.getAdopters.call();
     }).then(
       function(adopters) {
-        for (i=0; i < adopters.length; i++) {
-          if (adopter[i] !== '0x0000000000000000000000000000000000000000') {
+        console.log('adopters: ', adopters)
+        for (var i=0; i < adopters.length; i++) {
+          if (adopters[i] !== '0x0000000000000000000000000000000000000000') {
             $('.panel-pet').eq(i).find('button').text('Success').attr('disabled', true)
           }
         }
@@ -83,19 +84,24 @@ App = {
     event.preventDefault();
 
     var petId = parseInt($(event.target).data('id'));
+    console.log('petId: ', petId)
 
     var adoptionInstance;
     web3.eth.getAccounts(function(error, accounts) {
+      console.log('linked accounts: ', accounts)
+
       if (error) {
         console.log(error)
       }
 
       var account = accounts[0]
+      console.log('account: ', account)
       App.contracts.Adoption.deployed().then(function(instance) {
         adoptionInstance = instance;
 
         return adoptionInstance.adopt(petId, {from: account})
       }).then(function(result) {
+        console.log('after adopt: ', result)
         return App.markAdopted();
       }).catch(function (err){
         console.log(err.message);
