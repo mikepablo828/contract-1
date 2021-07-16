@@ -26,16 +26,21 @@ App = {
   initWeb3: async function() {
     // Modern dapp browsers ...
     if (window.ethereum) {
+      console.log('modern dapp or Metamask');
       App.web3Provider = window.ethereum;
       try {
+        // request account access
         await window.ethereum.enable()
       } catch(error) {
+        // user denied account access
         console.error('User denied account access')
       }
     }
+    // legacy dapp browsers
     else if (window.web3) {
       App.web3Provider = window.web3.currentProvider
     }
+    // if no injected web3 instance is detected, fall back to Ganache
     else {
       App.web3Provider = Web3.providers.HttpProvider('http://localhost:7545')
     }
